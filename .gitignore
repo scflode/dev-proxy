@@ -1,0 +1,4 @@
+certs/
+config/dynamic/
+!config/dynamic/local.yml
+domains

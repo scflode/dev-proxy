@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+function install_domain {
+  local domain=${1}
+  if [ -z ${domain} ]; then
+    echo "No domain given. Exiting."
+    exit 1
+  fi
+  echo "Installing certificates for '${domain}'..."
+  if [ -f "certs/wildcard.${domain}-cert.pem" ] && [ -f "certs/wildcard.${domain}-key.pem" ]; then
+    echo "Certificate for '${domain}' already present."
+  else
+    # Create certificate
+    mkcert \
+      -cert-file certs/wildcard.${domain}-cert.pem \
+      -key-file certs/wildcard.${domain}-key.pem \
+      "*.${domain}"
+    ## Configure certificate for traefik
+    cat > config/dynamic/${domain}.yml << EOF
+tls:
+  certificates:
+    - certFile: "/etc/certs/wildcard.${domain}-cert.pem"
+      keyFile: "/etc/certs/wildcard.${domain}-key.pem"
+EOF
+  fi
+}
+

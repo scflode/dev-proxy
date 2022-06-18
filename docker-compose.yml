@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.5
+    container_name: dev_proxy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # The Web UI (enabled by `api.` config)
+    networks:
+      - dev-proxy
+    volumes:
+      - ./config/base.yml:/etc/traefik/traefik.yml:ro
+      - ./config/dynamic:/etc/traefik/dynamic:ro
+      - ./certs:/etc/certs:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  dev-proxy:
+    external: true
