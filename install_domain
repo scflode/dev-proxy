@@ -25,3 +25,4 @@ EOF
   fi
 }
 
+install_domain ${1}

@@ -57,16 +57,14 @@ setup:
 ## add		Add a new domain to the dev-proxy.
 .PHONY: add
 add:
-	source install_domain
-	install_domain $$domain
+	@./install_domain $$domain
 	@echo "$$domain" >> domains
 
 PHONY: .install-domains
 .install-domains:
 	@if [ -f "domains" ]; then \
-		source install_domain; \
 		while read -r domain; do \
-			install_domain $$domain; \
+			./install_domain $$domain; \
 		done < domains; \
 	else \
 		echo "No domains defined"; \
