@@ -59,6 +59,17 @@ setup:
 add:
 	@scripts/install_domain $$domain
 	@echo "$$domain" >> domains
+	@echo "$$domain added successfully"
+
+## remove		Remove a domain from the dev-proxy.
+.PHONY: remove
+remove:
+	@scripts/uninstall_domain $$domain
+	@cp domains _domains
+	@sed "s/$$domain//g" _domains | grep -v "^$$" > domains
+	@rm _domains
+	@echo
+	@echo "$$domain removed successfully"
 
 PHONY: .install-domains
 .install-domains:

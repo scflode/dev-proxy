@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+function uninstall_domain {
+  local domain=${1}
+  if [ -z ${domain} ]; then
+    echo "No domain given. Exiting."
+    exit 1
+  fi
+  echo "Uninstalling certificates for '${domain}'..."
+  rm "certs/wildcard.${domain}-cert.pem" "certs/wildcard.${domain}-key.pem"
+  rm "config/dynamic/${domain}.yml"
+  echo "Certificate and configuration for '${domain}' removed."
+}
+
+uninstall_domain ${1}
