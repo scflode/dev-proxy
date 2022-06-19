@@ -64,6 +64,20 @@ Install the wildcard certificate for `*.domain.localhost` domains.
 mkcert -cert-file certs/wildcard.domain.localhost-cert.pem -key-file certs/wildcard.domain.localhost-key.pem "*.domain.localhost"
 ```
 
+### Configure reverse proxy
+
+For each new domain you need to add a configuration to the reverse proxy.
+
+This is done in the folder `config/dynamic` with a file named 
+`domain.localhost.yml` having content like this:
+
+```
+tls:
+  certificates:
+    - certFile: "/etc/certs/wildcard.domain.localhost-cert.pem"
+      keyFile: "/etc/certs/wildcard.domain.localhost-key.pem"
+```
+
 ## Manual steps
 
 ### Add domains to `/etc/hosts/`
