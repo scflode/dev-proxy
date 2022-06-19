@@ -24,6 +24,10 @@ In order to use the dev-proxy use `make up` or `make up logs`.
 
 To add a new domain you can use `make add domain="my-domain.localhost`.
 
+### Remove a domain
+
+To remove a domain you can use `make remove domain="my-domain.localhost"`.
+
 ### Persistent domains
 
 All domains that are configured via the Makefile (see "Add a new domain") are 
@@ -82,6 +86,9 @@ Open your `/etc/hosts` file and add the following:
 ### Use dnsmasq instead hosts file (Homebrew)
 
 To setup a real DNS server you can use `dnsmasq`.
+
+The advantage is that for new domains no other step is need as to add it to the
+project (see "Add new services").
 
 For macOS use the following commands in order:
 
