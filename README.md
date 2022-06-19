@@ -9,8 +9,10 @@ running locally at once.
 In order to use the `dev-proxy` you need to have installed the following:
 
 - Docker and docker-compose
-- [mkcert](https://mkcert.dev)
-- `nss` on macOS for Firefox
+- Install [mkcert](https://mkcert.dev):
+  - `brew install mkcert nss` (macOS)
+  - `choco install mkcert` (Win)
+  - [Linux](https://github.com/FiloSottile/mkcert#linux)
 - Clone this repository
 
 ## Usage
@@ -43,14 +45,7 @@ To setup everything described below at once you can use `make setup`.
 
 In order to have TLS enabled you need to have `mkcert` set up and ready.
 
-If not already installed on your system please proceed as follows:
-
-- Install mkcert:
-  - `brew install mkcert nss` (macOS)
-  - `choco install mkcert` (Win)
-  - [Linux](https://github.com/FiloSottile/mkcert#linux)
-- Create and setup local root certificate:
-  - `mkcert -install`
+Create and setup local root certificate: `mkcert -install`
 
 ### Create certificates
 
