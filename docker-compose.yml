@@ -2,7 +2,7 @@ version: '3'
 
 services:
   traefik:
-    image: traefik:v2.7
+    image: traefik:v3.0.0-beta2
     container_name: dev_proxy
     restart: unless-stopped
     security_opt:
@@ -10,6 +10,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "5432:5432" # Postgres
       - "8080:8080" # The Web UI (enabled by `api.` config)
     networks:
       - dev-proxy

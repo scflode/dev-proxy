@@ -29,3 +29,5 @@ entryPoints:
           scheme: https
   web-ssl:
     address: ":443"
+  postgres:
+    address: ":5432"
