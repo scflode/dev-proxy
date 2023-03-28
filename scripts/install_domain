@@ -2,7 +2,7 @@
 
 function install_domain {
   local domain=${1}
-  if [ -z ${domain} ]; then
+  if [ -z "${domain}" ]; then
     echo "No domain given. Exiting."
     exit 1
   fi
@@ -12,11 +12,11 @@ function install_domain {
   else
     # Create certificate
     mkcert \
-      -cert-file certs/wildcard.${domain}-cert.pem \
-      -key-file certs/wildcard.${domain}-key.pem \
+      -cert-file certs/wildcard."${domain}"-cert.pem \
+      -key-file certs/wildcard."${domain}"-key.pem \
       "*.${domain}"
     ## Configure certificate for traefik
-    cat > config/dynamic/${domain}.yml << EOF
+    cat > config/dynamic/"${domain}".yml << EOF
 tls:
   certificates:
     - certFile: "/etc/certs/wildcard.${domain}-cert.pem"
@@ -25,4 +25,4 @@ EOF
   fi
 }
 
-install_domain ${1}
+install_domain "${1}"
