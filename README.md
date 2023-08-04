@@ -15,6 +15,11 @@ In order to use the `dev-proxy` you need to have installed the following:
   - [Linux](https://github.com/FiloSottile/mkcert#linux)
 - Clone this repository
 
+## Setup
+
+With the prerequisites satisfied you can run `make setup`. This automatically 
+sets up everything needed to use the `dev-proxy`.
+
 ## Usage
 
 In order to use the dev-proxy use `make up` or `make up logs`. 
