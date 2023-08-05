@@ -2,7 +2,7 @@
 
 function uninstall_domain {
   local domain=${1}
-  if [ -z ${domain} ]; then
+  if [ -z "${domain}" ]; then
     echo "No domain given. Exiting."
     exit 1
   fi
