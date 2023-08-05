@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-REQUIRED = docker docker-compose
+REQUIRED = docker
 K := $(foreach exec,$(REQUIRED),\
         $(if $(shell which $(exec)),OK,$(error "$(exec) not found. Please install first.")))
 
@@ -37,7 +37,7 @@ down:
 logs:
 	@docker logs -f $(CONTAINER_NAME)
 
-## setup		Onetime setup for the dev-proxy.
+## setup		Onetime setup for the dev-proxy. `make setup`
 .PHONY: setup
 setup:
 	@mkdir -p certs/
@@ -52,14 +52,14 @@ setup:
 	@echo
 	@echo "Please add the domain mapping to /etc/hosts or setup dnsmasq."
 
-## add		Add a new domain to the dev-proxy.
+## add		Add a new domain to the dev-proxy. `make add domain="my.localhost"`
 .PHONY: add
 add:
 	@scripts/install_domain $$domain
 	@echo "$$domain" >> domains
 	@echo "$$domain added successfully"
 
-## remove		Remove a domain from the dev-proxy.
+## remove		Remove a domain from the dev-proxy.`make remove domain="my.localhost"`
 .PHONY: remove
 remove:
 	@scripts/uninstall_domain $$domain
@@ -78,7 +78,7 @@ PHONY: .install-domains
 		echo "No domains defined"; \
 	fi
 
-## add-network	Add a new network to the dev-proxy.
+## add-network	Add a new network to the dev-proxy. `make add-network network="my_network"`
 .PHONY: add-network
 add-network:
 	@echo "$$network" >> networks
@@ -86,7 +86,7 @@ add-network:
 	@echo "Network $$network added successfully"
 	@make down up
 
-## remove-network	Remove a network to the dev-proxy.
+## remove-network	Remove a network to the dev-proxy. `make remove-network network="my_network"`
 .PHONY: remove-network
 remove-network:
 	@cp networks _networks
