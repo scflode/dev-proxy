@@ -31,21 +31,13 @@ In order to use the dev-proxy use `make up` or `make up logs`.
 > This requires the dev-proxy to be setup properly as described in the section 
 > "Setup".
 
-### Add a new domain
+### Add a new domain and network
 
-To add a new domain you can use `make add domain="my-domain.localhost`.
+To add a new domain you can use `make add domain="my-domain.localhost network="my_network"`.
 
-### Remove a domain
+### Remove a domain and network
 
-To remove a domain you can use `make remove domain="my-domain.localhost"`.
-
-### Add a new network
-
-To add a new network you can use `make add-network network=mynetwork`.
-
-### Remove a network
-
-To remove a network you can use `make remove-network network=mynetwork`.
+To remove a domain you can use `make remove domain="my-domain.localhost" network="my_network"`.
 
 ### Example setup of an existing project
 
@@ -54,9 +46,11 @@ called `app` (this is the container service you want to access) with the
 network called `my_network` and the desired domain `my_domain` you run:
 
 ```
-make add domain=my_domain
-make add-network network=my_network
+make add domain=my_domain network=my_network
 ```
+
+Next please check [Domains](docs/02_domains.md) for information about mapping 
+the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
 The you can access the project via your browser as [https://app.my_domain.localhost].
 
