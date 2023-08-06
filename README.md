@@ -61,6 +61,14 @@ the respective username and password as well as other project specific settings.
 
 To remove a domain you can use `make remove domain="my-domain.localhost" network="my_network"`.
 
+## Troubleshooting
+
+When you encounter problems with not reachable services you can open 
+[https://localhost]. This shows the Traefik dashboard.
+
+Another useful thing could be to run `make logs` that tails the Traefik 
+container logs.
+
 ## More information
 
 For all available targets you can run `make` or `make help`.
