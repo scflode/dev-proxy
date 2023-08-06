@@ -32,7 +32,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=${network_name}"
-      - "traefik.http.service_names.${service_name}.loadbalancer.server.port=${port}"
+      - "traefik.http.services.${service_name}.loadbalancer.server.port=${port}"
       - "traefik.http.routers.${service_name}-insecure.rule=Host(${service_name}.${domain})"
       - "traefik.http.routers.${service_name}-insecure.entrypoints=web"
       - "traefik.http.routers.${service_name}-insecure.middlewares=${service_name}-secure"

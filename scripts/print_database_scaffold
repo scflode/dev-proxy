@@ -36,7 +36,7 @@ services:
       - "traefik.tcp.routers.${service_name}.rule=HostSNI(${service_name}.${domain})"
       - "traefik.tcp.routers.${service_name}.entryPoints=postgres"
       - "traefik.tcp.routers.${service_name}.tls=true"
-      - "traefik.tcp.service_names.${service_name}-svc.loadbalancer.server.port=${port}"
+      - "traefik.tcp.services.${service_name}-svc.loadbalancer.server.port=${port}"
 
 networks:
   default:
