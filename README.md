@@ -35,10 +35,6 @@ In order to use the dev-proxy use `make up` or `make up logs`.
 
 To add a new domain you can use `make add domain="my-domain.localhost network="my_network"`.
 
-### Remove a domain and network
-
-To remove a domain you can use `make remove domain="my-domain.localhost" network="my_network"`.
-
 ### Example setup of an existing project
 
 To setup an already configured project (see [services](docs/04_services.md)) 
@@ -47,8 +43,10 @@ network called `my_network` and the desired domain `my_domain` you run:
 
 ```
 make add domain=my_domain network=my_network
+make up
 ```
 
+**Note**
 Next please check [Domains](docs/02_domains.md) for information about mapping 
 the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
@@ -59,7 +57,13 @@ all) you can then given the database service is configured as `db` access
 the database locally via the host `db.my_domain.localhost` port `5432` and the 
 respective username and password as well as other project specific settings.
 
+### Remove a domain and network
+
+To remove a domain you can use `make remove domain="my-domain.localhost" network="my_network"`.
+
 ## More information
+
+For all available targets you can run `make` or `make help`.
 
 - [Setup](docs/01_setup.md)
 - [Domains](docs/02_domains.md)
