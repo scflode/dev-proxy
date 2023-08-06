@@ -46,9 +46,9 @@ make add domain=my_domain network=my_network
 make up
 ```
 
-**Note**
-Next please check [Domains](docs/02_domains.md) for information about mapping 
-the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
+> **Important**
+> Next please check [Domains](docs/02_domains.md) for information about mapping 
+> the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
 The you can access the project via your browser as [https://app.my_domain.localhost].
 
