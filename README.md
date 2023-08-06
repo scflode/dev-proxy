@@ -37,7 +37,7 @@ To add a new domain you can use `make add domain="my-domain.localhost network="m
 
 ### Example setup of an existing project
 
-To setup an already configured project (see [services](docs/04_services.md)) 
+To setup an already configured project (see [Services](docs/04_services.md)) 
 called `app` (this is the container service you want to access) with the 
 network called `my_network` and the desired domain `my_domain` you run:
 
