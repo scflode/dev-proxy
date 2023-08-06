@@ -54,8 +54,8 @@ The you can access the project via your browser as [https://app.my_domain.localh
 
 If the project has the database labels also configured (or has a database at 
 all) you can then given the database service is configured as `db` access 
-the database locally via the host `db.my_domain.localhost` port `5432` and the 
-respective username and password as well as other project specific settings.
+the database locally via the host `db.my_domain.localhost` port `15432` (!) and 
+the respective username and password as well as other project specific settings.
 
 ### Remove a domain and network
 

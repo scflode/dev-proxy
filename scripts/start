@@ -18,7 +18,7 @@ function start {
 		--volume="/var/run/docker.sock:/var/run/docker.sock" \
 		--publish="80:80" \
 		--publish="443:443" \
-		--publish="5432:5432" \
+		--publish="15432:5432" \
 		${image_name} >/dev/null
 
 	if [ -f "networks" ]; then

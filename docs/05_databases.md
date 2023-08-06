@@ -20,7 +20,8 @@ The latest Traefik version (3, currently in beta) allows Host SNI routing that
 can be used especially for PostgreSQL database server (as those are not HTTP 
 but only TCP).
 
-The project setup looks like the following:
+The project setup looks like the following (for completeness the main service 
+is included as well):
 
 ```
 version: "3.7"
@@ -34,6 +35,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=myapp"
+      - "traefik.http.services.my-app.loadbalancer.server.port=4000"
       - "traefik.http.routers.my-app-insecure.rule=Host(`my-app.domain.localhost`)"
       - "traefik.http.routers.my-app-insecure.entrypoints=web"
       - "traefik.http.routers.my-app-insecure.middlewares=my-app-secure"
@@ -68,8 +70,14 @@ networks:
 ```
 
 The example above will expose `my-app.domain.localhost` as usual via port `443`
-but also expose `my-app-db.domain.localhost` on port `5432` for the database.
+but also expose `my-app-db.domain.localhost` on port `15432` for the database.
 With this you can establish a database connection from the tool of your choice.
+
+> **Important**
+> Note that for compatibility reasons the exposed port for PostgreSQL is
+> `15432` instead of `5432`. That is because one off tests without the proxy
+> should be as easy as possible and some people might have a local PostgreSQL
+> installation that might not be desired to be uninstalled.
 
 > Another advantage is that also here as for normal services you have TLS setup 
 which might save you from some headaches when deploying to production (in case 
