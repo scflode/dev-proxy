@@ -65,7 +65,7 @@ respective username and password as well as other project specific settings.
 - [Domains](docs/02_domains.md)
 - [Networking](docs/03_networking.md)
 - [Services](docs/04_services.md)
-- [Postgres](docs/05_postgres.md)
+- [Databases](docs/05_databases.md)
 - [Internals](docs/06_internals.md)
 
 ## License

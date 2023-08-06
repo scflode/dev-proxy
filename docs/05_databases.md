@@ -1,5 +1,8 @@
 # Databases
 
+> Currently out of the box PostgreSQL is configured only. For supporting e.g.
+> MySQL you can adapt the `config/base.yml` accordingly.
+
 ## Access to database (PostgreSQL) containers
 
 An important part of development with databases is to access those from outside.
