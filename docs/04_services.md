@@ -12,21 +12,11 @@ To add services take and adapt the following labels to the project's
 version: "3.7"
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./application:/app:delegated
-  nginx:
-    image: nginx:latest
-    links:
-      - my-app
-    volumes:
-      - ./application:/app:delegated
-      - ./nginx-local-dev.conf:/etc/nginx/conf.d/default.conf
+    image: my_image:latest
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=myapp"
+      - "traefik.http.service_names.my-app.loadbalancer.server.port=80"
       - "traefik.http.routers.my-app-insecure.rule=Host(`my-app.domain.localhost`)"
       - "traefik.http.routers.my-app-insecure.entrypoints=web"
       - "traefik.http.routers.my-app-insecure.middlewares=my-app-secure"
