@@ -37,7 +37,8 @@ down:
 logs:
 	@docker logs -f $(CONTAINER_NAME)
 
-## setup		Onetime setup for the dev-proxy. `make setup`
+## setup		Onetime setup for the dev-proxy. 
+## 		`make setup`
 .PHONY: setup
 setup:
 	@mkdir -p certs/
@@ -52,21 +53,58 @@ setup:
 	@echo
 	@echo "Please add the domain mapping to /etc/hosts or setup dnsmasq."
 
-## add		Add a new domain to the dev-proxy. `make add domain="my.localhost"`
+## add		Add a new domain to the dev-proxy.
+##		`make add domain="my.localhost"`
 .PHONY: add
 add:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, network, network name)
 	@scripts/install_domain $$domain
 	@echo "$$domain" >> domains
-	@echo "$$domain added successfully"
+	$(info ${domain} added successfully)
+	@echo "$$network" >> networks
+	$(info Network ${network} added successfully)
+	@make down up
 
-## remove		Remove a domain from the dev-proxy.`make remove domain="my.localhost"`
+## remove		Remove a domain from the dev-proxy.
+##		`make remove domain="my.localhost"`
 .PHONY: remove
 remove:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, network, network name)
 	@scripts/uninstall_domain $$domain
 	@cp domains _domains
 	@sed "s/$$domain//g" _domains | grep -v "^$$" > domains || echo ""
 	@rm _domains
-	@echo "$$domain removed successfully"
+	$(info ${domain} removed successfully)
+	@cp networks _networks
+	@sed "s/$$network//g" _networks | grep -v "^$$" > networks || echo ""
+	@rm _networks
+	$(info Network ${network} removed successfully)
+	@make down up
+
+##
+## Helpers
+## -------
+##
+
+## print-service	Print the boilerplate for a service definition.
+##		`make print-service domain="my.localhost" service="app" network="my_network" port="4000"`
+.PHONY: print-service
+print-service:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, service, service name)
+	$(call check_defined, network, network name)
+	@scripts/print_service_scaffold $$domain $$service $$network $$port
+
+## print-database	Print the boilerplate for a database definition.
+##		`make print-database domain="my.localhost" service="app" network="my_network" port="4000"`
+.PHONY: print-database
+print-database:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, service, service name)
+	$(call check_defined, network, network name)
+	@scripts/print_database_scaffold $$domain $$service $$network $$port
 
 PHONY: .install-domains
 .install-domains:
@@ -78,20 +116,16 @@ PHONY: .install-domains
 		echo "No domains defined"; \
 	fi
 
-## add-network	Add a new network to the dev-proxy. `make add-network network="my_network"`
-.PHONY: add-network
-add-network:
-	@echo "$$network" >> networks
-	@echo
-	@echo "Network $$network added successfully"
-	@make down up
-
-## remove-network	Remove a network to the dev-proxy. `make remove-network network="my_network"`
-.PHONY: remove-network
-remove-network:
-	@cp networks _networks
-	@sed "s/$$network//g" _networks | grep -v "^$$" > networks || echo ""
-	@rm _networks
-	@echo "Network $$network removed successfully"
-	@make down up
-
+# Check that given variables are set and all have non-empty values,
+# die with an error otherwise.
+#
+# Params:
+#   1. Variable name(s) to test.
+#   2. (optional) Error message to print.
+# see https://stackoverflow.com/questions/10858261/how-to-abort-makefile-if-variable-not-set
+check_defined = \
+    $(strip $(foreach 1,$1, \
+        $(call __check_defined,$1,$(strip $(value 2)))))
+__check_defined = \
+    $(if $(value $1),, \
+      $(error Undefined $1$(if $2, ($2))))
