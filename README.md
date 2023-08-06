@@ -37,7 +37,7 @@ To add a new domain you can use `make add domain="my-domain.localhost network="m
 
 ### Example setup of an existing project
 
-To setup an already configured project (see [Services](/docs/04_services.md)) 
+To setup an already configured project (see [Services](./docs/04_services.md)) 
 called `app` (this is the container service you want to access) with the 
 network called `my_network` and the desired domain `my_domain` you run:
 
@@ -47,7 +47,7 @@ make up
 ```
 
 > **Important**
-> Next please check [Domains](/docs/02_domains.md) for information about mapping 
+> Next please check [Domains](./docs/02_domains.md) for information about mapping 
 > the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
 The you can access the project via your browser as [https://app.my_domain.localhost].
@@ -65,12 +65,12 @@ To remove a domain you can use `make remove domain="my-domain.localhost" network
 
 For all available targets you can run `make` or `make help`.
 
-- [Setup](/docs/01_setup.md)
-- [Domains](/docs/02_domains.md)
-- [Networking](/docs/03_networking.md)
-- [Services](/docs/04_services.md)
-- [Databases](/docs/05_databases.md)
-- [Internals](/docs/06_internals.md)
+- [Setup](./docs/01_setup.md)
+- [Domains](./docs/02_domains.md)
+- [Networking](./docs/03_networking.md)
+- [Services](./docs/04_services.md)
+- [Databases](./docs/05_databases.md)
+- [Internals](./docs/06_internals.md)
 
 ## License
 
