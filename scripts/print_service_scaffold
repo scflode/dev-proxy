@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+function print_scaffold {
+	local domain=${1}
+	if [ -z "${domain}" ]; then
+		echo "No domain given. Exiting."
+		exit 1
+	fi
+	local service_name=${2}
+	if [ -z "${service_name}" ]; then
+		echo "No service_name given. Exiting."
+		exit 1
+	fi
+	local network_name=${3}
+	if [ -z "${network_name}" ]; then
+		echo "No network_name given. Exiting."
+		exit 1
+	fi
+	local port=${4}
+	if [ -z "${port}" ]; then
+		port=80
+	fi
+
+	echo "This print contains the Traefik labels and network config for the docker-compose.yaml"
+	echo
+
+	cat <<EOF
+version: "3.7"
+services:
+  ${service_name}:
+    ...
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${network_name}"
+      - "traefik.http.service_names.${service_name}.loadbalancer.server.port=${port}"
+      - "traefik.http.routers.${service_name}-insecure.rule=Host(${service_name}.${domain})"
+      - "traefik.http.routers.${service_name}-insecure.entrypoints=web"
+      - "traefik.http.routers.${service_name}-insecure.middlewares=${service_name}-secure"
+      - "traefik.http.middlewares.${service_name}-secure.redirectscheme.scheme=https"
+      - "traefik.http.routers.${service_name}.entrypoints=web-ssl"
+      - "traefik.http.routers.${service_name}.rule=Host(${service_name}.${domain})"
+      - "traefik.http.routers.${service_name}.tls=true"
+
+networks:
+  default:
+    name: ${network_name}
+EOF
+}
+
+print_scaffold "${@}"

@@ -37,7 +37,8 @@ down:
 logs:
 	@docker logs -f $(CONTAINER_NAME)
 
-## setup		Onetime setup for the dev-proxy. `make setup`
+## setup		Onetime setup for the dev-proxy. 
+## 		`make setup`
 .PHONY: setup
 setup:
 	@mkdir -p certs/
@@ -52,7 +53,8 @@ setup:
 	@echo
 	@echo "Please add the domain mapping to /etc/hosts or setup dnsmasq."
 
-## add		Add a new domain to the dev-proxy. `make add domain="my.localhost"`
+## add		Add a new domain to the dev-proxy.
+##		`make add domain="my.localhost"`
 .PHONY: add
 add:
 	$(call check_defined, domain, domain name)
@@ -64,7 +66,8 @@ add:
 	$(info Network ${network} added successfully)
 	@make down up
 
-## remove		Remove a domain from the dev-proxy.`make remove domain="my.localhost"`
+## remove		Remove a domain from the dev-proxy.
+##		`make remove domain="my.localhost"`
 .PHONY: remove
 remove:
 	$(call check_defined, domain, domain name)
@@ -79,6 +82,29 @@ remove:
 	@rm _networks
 	$(info Network ${network} removed successfully)
 	@make down up
+
+##
+## Helpers
+## -------
+##
+
+## print-service	Print the boilerplate for a service definition.
+##		`make print-service domain="my.localhost" service="app" network="my_network" port="4000"`
+.PHONY: print-service
+print-service:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, service, service name)
+	$(call check_defined, network, network name)
+	@scripts/print_service_scaffold $$domain $$service $$network $$port
+
+## print-database	Print the boilerplate for a database definition.
+##		`make print-database domain="my.localhost" service="app" network="my_network" port="4000"`
+.PHONY: print-database
+print-database:
+	$(call check_defined, domain, domain name)
+	$(call check_defined, service, service name)
+	$(call check_defined, network, network name)
+	@scripts/print_database_scaffold $$domain $$service $$network $$port
 
 PHONY: .install-domains
 .install-domains:
