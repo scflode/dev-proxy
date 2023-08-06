@@ -33,7 +33,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=${network_name}"
-      - "traefik.tcp.routers.${service_name}.rule=HostSNI(${service_name}.${domain})"
+      - "traefik.tcp.routers.${service_name}.rule=HostSNI(\`${service_name}.${domain}\`)"
       - "traefik.tcp.routers.${service_name}.entryPoints=postgres"
       - "traefik.tcp.routers.${service_name}.tls=true"
       - "traefik.tcp.services.${service_name}-svc.loadbalancer.server.port=${port}"
