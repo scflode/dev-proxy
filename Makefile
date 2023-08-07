@@ -89,22 +89,24 @@ remove:
 ##
 
 ## print-service	Print the boilerplate for a service definition.
-##		`make print-service domain="my.localhost" service="app" network="my_network" port="4000"`
+##		`make print-service domain="app.my-domain.localhost" project="my_app" service="app" network="my_network" port="4000"`
 .PHONY: print-service
 print-service:
 	$(call check_defined, domain, domain name)
+	$(call check_defined, project, project name)
 	$(call check_defined, service, service name)
 	$(call check_defined, network, network name)
-	@scripts/print_service_scaffold $$domain $$service $$network $$port
+	@scripts/print_service_scaffold $$domain $$project $$service $$network $$port
 
 ## print-database	Print the boilerplate for a database definition.
-##		`make print-database domain="my.localhost" service="app" network="my_network" port="4000"`
+##		`make print-database domain="db.my-app.localhost" project="my_app" service="db" network="my_network" port="4000"`
 .PHONY: print-database
 print-database:
 	$(call check_defined, domain, domain name)
+	$(call check_defined, project, project name)
 	$(call check_defined, service, service name)
 	$(call check_defined, network, network name)
-	@scripts/print_database_scaffold $$domain $$service $$network $$port
+	@scripts/print_database_scaffold $$domain $$project $$service $$network $$port
 
 PHONY: .install-domains
 .install-domains:

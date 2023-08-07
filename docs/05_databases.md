@@ -26,7 +26,7 @@ is included as well):
 ```
 version: "3.7"
 services:
-  my-app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -34,15 +34,15 @@ services:
       - db
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=myapp"
-      - "traefik.http.services.my-app.loadbalancer.server.port=4000"
-      - "traefik.http.routers.my-app-insecure.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app-insecure.entrypoints=web"
-      - "traefik.http.routers.my-app-insecure.middlewares=my-app-secure"
-      - "traefik.http.middlewares.my-app-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.my-app.entrypoints=web-ssl"
-      - "traefik.http.routers.my-app.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app.tls=true"
+      - "traefik.docker.network=my_network"
+      - "traefik.http.services.my_project_app_service.loadbalancer.server.port=4000"
+      - "traefik.http.routers.my_project_app_unsecure.rule=Host(`app.my-domain.localhost`)"
+      - "traefik.http.routers.my_project_app_unsecure.entrypoints=web"
+      - "traefik.http.routers.my_project_app_unsecure.middlewares=my_project_app_secure_middleware"
+      - "traefik.http.middlewares.my_project_app_secure_middleware.redirectscheme.scheme=https"
+      - "traefik.http.routers.my_project_app_secure.entrypoints=web-ssl"
+      - "traefik.http.routers.my_project_app_secure.rule=Host(`app.my-domain.localhost`)"
+      - "traefik.http.routers.my_project_app_secure.tls=true"
 
   db:
     image: postgres:14.5-alpine
@@ -58,19 +58,19 @@ services:
           nocopy: true
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=myapp"
-      - "traefik.tcp.routers.my-app-db.rule=HostSNI(`my-app-db.domain.localhost`)"
-      - "traefik.tcp.routers.my-app-db.entryPoints=postgres"
-      - "traefik.tcp.routers.my-app-db.tls=true"
-      - "traefik.tcp.services.my-app-db-svc.loadbalancer.server.port=5432"
+      - "traefik.docker.network=my_network"
+      - "traefik.tcp.routers.my_project_db.rule=HostSNI(`db.my-domain.localhost`)"
+      - "traefik.tcp.routers.my_project_db.entryPoints=postgres"
+      - "traefik.tcp.routers.my_project_db.tls=true"
+      - "traefik.tcp.services.my_project_db_service.loadbalancer.server.port=5432"
       
 networks:
   default:
-    name: myapp
+    name: my_network
 ```
 
-The example above will expose `my-app.domain.localhost` as usual via port `443`
-but also expose `my-app-db.domain.localhost` on port `15432` for the database.
+The example above will expose `app.my-domain.localhost` as usual via port `443`
+but also expose `db.my-domain.localhost` on port `15432` for the database.
 With this you can establish a database connection from the tool of your choice.
 
 > **Important**

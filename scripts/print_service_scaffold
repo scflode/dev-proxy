@@ -6,17 +6,22 @@ function print_scaffold {
 		echo "No domain given. Exiting."
 		exit 1
 	fi
-	local service_name=${2}
+	local project_name=${2}
+	if [ -z "${project_name}" ]; then
+		echo "No project_name given. Exiting."
+		exit 1
+	fi
+	local service_name=${3}
 	if [ -z "${service_name}" ]; then
 		echo "No service_name given. Exiting."
 		exit 1
 	fi
-	local network_name=${3}
+	local network_name=${4}
 	if [ -z "${network_name}" ]; then
 		echo "No network_name given. Exiting."
 		exit 1
 	fi
-	local port=${4}
+	local port=${5}
 	if [ -z "${port}" ]; then
 		port=80
 	fi
@@ -32,14 +37,14 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=${network_name}"
-      - "traefik.http.services.${service_name}.loadbalancer.server.port=${port}"
-      - "traefik.http.routers.${service_name}-insecure.rule=Host(\`${service_name}.${domain}\`)"
-      - "traefik.http.routers.${service_name}-insecure.entrypoints=web"
-      - "traefik.http.routers.${service_name}-insecure.middlewares=${service_name}-secure"
-      - "traefik.http.middlewares.${service_name}-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.${service_name}.entrypoints=web-ssl"
-      - "traefik.http.routers.${service_name}.rule=Host(\`${service_name}.${domain}\`)"
-      - "traefik.http.routers.${service_name}.tls=true"
+      - "traefik.http.services.${project_name}_${service_name}_service.loadbalancer.server.port=${port}"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.rule=Host(\`${domain}\`)"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.entrypoints=web"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.middlewares=${project_name}_${service_name}_secure_middleware"
+      - "traefik.http.middlewares.${project_name}_${service_name}_secure_middleware.redirectscheme.scheme=https"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.entrypoints=web-ssl"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.rule=Host(\`${domain}\`)"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.tls=true"
 
 networks:
   default:

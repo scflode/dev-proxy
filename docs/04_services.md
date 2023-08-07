@@ -15,19 +15,19 @@ services:
     image: my_image:latest
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=myapp"
-      - "traefik.http.service_names.my-app.loadbalancer.server.port=80"
-      - "traefik.http.routers.my-app-insecure.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app-insecure.entrypoints=web"
-      - "traefik.http.routers.my-app-insecure.middlewares=my-app-secure"
-      - "traefik.http.middlewares.my-app-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.my-app.entrypoints=web-ssl"
-      - "traefik.http.routers.my-app.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app.tls=true"
+      - "traefik.docker.network=my_network"
+      - "traefik.http.service_names.my_project_app_service.loadbalancer.server.port=80"
+      - "traefik.http.routers.my_project_app_unsecure.rule=Host(`app.my-domain.localhost`)"
+      - "traefik.http.routers.my_project_app_unsecure.entrypoints=web"
+      - "traefik.http.routers.my_project_app_unsecure.middlewares=my_project_app_secure_middleware"
+      - "traefik.http.middlewares.my_project_app_secure_middleware.redirectscheme.scheme=https"
+      - "traefik.http.routers.my_project_app_secure.entrypoints=web-ssl"
+      - "traefik.http.routers.my_project_app_secure.rule=Host(`app.my-domain.localhost`)"
+      - "traefik.http.routers.my_project_app_secure.tls=true"
 
 networks:
   default:
-    name: myapp
+    name: my_network
 ```
 
 A short explanation:
