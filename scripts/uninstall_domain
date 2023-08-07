@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
+function remove_domain {
+	local domain=${1}
+	cp domains _domains
+	sed "s/$$domain//g" _domains | grep -v "^$$" >domains || echo ""
+	rm _domains
+}
+
 function uninstall_domain {
-  local domain=${1}
-  if [ -z "${domain}" ]; then
-    echo "No domain given. Exiting."
-    exit 1
-  fi
-  echo "Uninstalling certificates for '${domain}'..."
-  rm "certs/wildcard.${domain}-cert.pem" "certs/wildcard.${domain}-key.pem"
-  rm "config/dynamic/${domain}.yml"
-  echo "Certificate and configuration for '${domain}' removed."
+	local domain=${1}
+	if [ -z "${domain}" ]; then
+		echo "No domain given. Exiting."
+		exit 1
+	fi
+	echo "Uninstalling certificates for '${domain}'..."
+	rm "certs/wildcard.${domain}-cert.pem" "certs/wildcard.${domain}-key.pem"
+	rm "config/dynamic/${domain}.yml"
+	echo "Certificate and configuration for '${domain}' removed."
+	remove_domain ${domain}
 }
 
 uninstall_domain ${1}

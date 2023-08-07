@@ -53,34 +53,24 @@ setup:
 	@echo
 	@echo "Please add the domain mapping to /etc/hosts or setup dnsmasq."
 
-## add		Add a new domain to the dev-proxy.
+## add		Add a new domain and network to the dev-proxy.
 ##		`make add domain="my.localhost"`
 .PHONY: add
 add:
 	$(call check_defined, domain, domain name)
 	$(call check_defined, network, network name)
 	@scripts/install_domain $$domain
-	@echo "$$domain" >> domains
-	$(info ${domain} added successfully)
-	@echo "$$network" >> networks
-	$(info Network ${network} added successfully)
+	@scripts/install_network $$network
 	@make down up
 
-## remove		Remove a domain from the dev-proxy.
-##		`make remove domain="my.localhost"`
+## remove		Remove a domain and network from the dev-proxy.
+##		`make remove domain="my.localhost" network="my_network"`
 .PHONY: remove
 remove:
 	$(call check_defined, domain, domain name)
 	$(call check_defined, network, network name)
 	@scripts/uninstall_domain $$domain
-	@cp domains _domains
-	@sed "s/$$domain//g" _domains | grep -v "^$$" > domains || echo ""
-	@rm _domains
-	$(info ${domain} removed successfully)
-	@cp networks _networks
-	@sed "s/$$network//g" _networks | grep -v "^$$" > networks || echo ""
-	@rm _networks
-	$(info Network ${network} removed successfully)
+	@scripts/install_network $$network
 	@make down up
 
 ##
