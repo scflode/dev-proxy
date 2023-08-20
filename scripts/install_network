@@ -10,6 +10,7 @@ function add_network {
 	done <networks
 	echo "Registering network '${network}'..."
 	echo ${network} >>networks
+	docker network create ${network}
 }
 
 function install_network {
