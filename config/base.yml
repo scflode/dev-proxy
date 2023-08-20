@@ -16,7 +16,7 @@ providers:
     watch: true
 
 log:
-  level: INFO
+  level: DEBUG
   format: common
 
 entryPoints:
