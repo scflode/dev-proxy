@@ -4,6 +4,8 @@ This repository contains a reverse proxy setup via
 [traefik](https://traefik.io) that allows to have services with the same port
 running locally at once.
 
+The new version with dynamic multi database support can be previewed [here](https://github.com/scflode/dev-proxy/tree/0.2.x).
+
 ## Prerequisites
 
 In order to use the `dev-proxy` you need to have installed the following:
