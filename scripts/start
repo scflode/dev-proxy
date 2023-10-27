@@ -28,7 +28,7 @@ function start {
 		echo "Connecting to networks:"
 		while read -r network_name; do
 			echo "${network_name}"
-			docker network connect "${network_name}" "${container_name}"
+			docker network connect "${network_name}" "${container_name}" || echo "Network ${network_name} not present, skipping. You need to run 'make down up' when it's available!"
 		done <networks
 	fi
 }
