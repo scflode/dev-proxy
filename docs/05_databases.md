@@ -1,5 +1,6 @@
 # Databases
 
+> [!NOTE]
 > Currently out of the box PostgreSQL is configured only. For supporting e.g.
 > MySQL you can adapt the `config/base.yml` and `scripts/start` accordingly.
 
@@ -73,12 +74,12 @@ The example above will expose `app.my-domain.localhost` as usual via port `443`
 but also expose `db.my-domain.localhost` on port `15432` for the database.
 With this you can establish a database connection from the tool of your choice.
 
-> **Important**
+> [!IMPORTANT]
 > Note that for compatibility reasons the exposed port for PostgreSQL is
 > `15432` instead of `5432`. That is because one off tests without the proxy
 > should be as easy as possible and some people might have a local PostgreSQL
 > installation that might not be desired to be uninstalled.
-
+> 
 > Another advantage is that also here as for normal services you have TLS setup 
 which might save you from some headaches when deploying to production (in case 
 the database is TLS secured that is).
