@@ -1,6 +1,6 @@
 # dev-proxy
 
-> **Warning**
+> [!WARNING]
 > This is the next iteration with HostSNI support for easier local database 
 > access. This might still have rough edges. Refer to `main` if you encounter 
 > issues.
@@ -33,6 +33,7 @@ sets up everything needed to use the `dev-proxy`. This target is idempotent.
 
 In order to use the dev-proxy use `make up` or `make up logs`. 
 
+> [!NOTE]
 > This requires the dev-proxy to be setup properly as described in the section 
 > "Setup".
 
@@ -51,7 +52,7 @@ make add domain=my_domain network=my_network
 make up
 ```
 
-> **Important**
+> [!IMPORTANT]
 > Next please check [Domains](./docs/02_domains.md) for information about mapping 
 > the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
