@@ -40,10 +40,12 @@ services:
       - "traefik.http.services.${project_name}_${service_name}_service.loadbalancer.server.port=${port}"
       - "traefik.http.routers.${project_name}_${service_name}_unsecure.rule=Host(\`${domain}\`)"
       - "traefik.http.routers.${project_name}_${service_name}_unsecure.entrypoints=web"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.service=${project_name}_${service_name}_service"
       - "traefik.http.routers.${project_name}_${service_name}_unsecure.middlewares=${project_name}_${service_name}_secure_middleware"
       - "traefik.http.middlewares.${project_name}_${service_name}_secure_middleware.redirectscheme.scheme=https"
       - "traefik.http.routers.${project_name}_${service_name}_secure.entrypoints=web-ssl"
       - "traefik.http.routers.${project_name}_${service_name}_secure.rule=Host(\`${domain}\`)"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.service=${project_name}_${service_name}_service"
       - "traefik.http.routers.${project_name}_${service_name}_secure.tls=true"
 
 networks:
