@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-image_name="traefik:v3.0.0-rc1"
+image_name="traefik:v3.0.0"
 container_name="dev_proxy"
 
 set -eu
