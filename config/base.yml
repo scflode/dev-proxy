@@ -31,3 +31,5 @@ entryPoints:
     address: ":443"
   postgres:
     address: ":5432"
+  electric:
+    address: ":65432"
