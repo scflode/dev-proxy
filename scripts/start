@@ -21,6 +21,7 @@ function start {
 		--publish="80:80" \
 		--publish="443:443" \
 		--publish="15432:5432" \
+		--publish="27017:27017" \
 		--publish="65432:65432" \
 		--network="dev-proxy" \
 		${image_name} >/dev/null
