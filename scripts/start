@@ -1,38 +1,38 @@
 #!/usr/bin/env bash
 
-image_name="traefik:v3.1.4"
+image_name="traefik:v3.5.0"
 container_name="dev_proxy"
 
 set -eu
 
 function start {
-	echo "Starting dev-proxy..."
-	echo "Adding dev-proxy network for BC reasons..."
-	docker network create dev-proxy >/dev/null 2>&1 || echo "dev-proxy network is already created"
-	docker run \
-		-d \
-		--name ${container_name} \
-		--restart="unless-stopped" \
-		--security-opt="no-new-privileges=true" \
-		--volume="${PWD}/config/base.yml:/etc/traefik/traefik.yml:ro" \
-		--volume="${PWD}/config/dynamic:/etc/traefik/dynamic:ro" \
-		--volume="${PWD}/certs:/etc/certs:ro" \
-		--volume="/var/run/docker.sock:/var/run/docker.sock" \
-		--publish="80:80" \
-		--publish="443:443" \
-		--publish="15432:5432" \
-		--publish="27017:27017" \
-		--publish="65432:65432" \
-		--network="dev-proxy" \
-		${image_name} >/dev/null
+  echo "Starting dev-proxy..."
+  echo "Adding dev-proxy network for BC reasons..."
+  docker network create dev-proxy >/dev/null 2>&1 || echo "dev-proxy network is already created"
+  docker run \
+    -d \
+    --name ${container_name} \
+    --restart="unless-stopped" \
+    --security-opt="no-new-privileges=true" \
+    --volume="${PWD}/config/base.yml:/etc/traefik/traefik.yml:ro" \
+    --volume="${PWD}/config/dynamic:/etc/traefik/dynamic:ro" \
+    --volume="${PWD}/certs:/etc/certs:ro" \
+    --volume="/var/run/docker.sock:/var/run/docker.sock" \
+    --publish="80:80" \
+    --publish="443:443" \
+    --publish="15432:5432" \
+    --publish="27017:27017" \
+    --publish="65432:65432" \
+    --network="dev-proxy" \
+    ${image_name} >/dev/null
 
-	if [ -f "networks" ]; then
-		echo "Connecting to networks:"
-		while read -r network_name; do
-			echo "${network_name}"
-			docker network connect "${network_name}" "${container_name}" || echo "Network ${network_name} not present, skipping. You need to run 'make down up' when it's available!"
-		done <networks
-	fi
+  if [ -f "networks" ]; then
+    echo "Connecting to networks:"
+    while read -r network_name; do
+      echo "${network_name}"
+      docker network connect "${network_name}" "${container_name}" || echo "Network ${network_name} not present, skipping. You need to run 'make down up' when it's available!"
+    done <networks
+  fi
 }
 
 start
