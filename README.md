@@ -1,10 +1,5 @@
 # dev-proxy
 
-> [!WARNING]
-> This is the next iteration with HostSNI support for easier local database 
-> access. This might still have rough edges. Refer to `main` if you encounter 
-> issues.
-
 This repository contains a reverse proxy setup via [traefik](https://traefik.io) 
 that allows to have multiple services with the same port running locally at 
 once without port juggling.
