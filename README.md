@@ -6,9 +6,9 @@ once without port juggling.
 
 Further it allows to have full TLS support by leveraging [mkcert](https://mkcert.dev).
 
-The Docker container start when the Docker daemon starts (so maybe on startup). This means you do not need to worry about it.
+The Docker container starts when the Docker daemon starts (usuallty on startup). This means you do not need to worry about it.
 
-The new version with dynamic multi database support can be previewed [here](https://github.com/scflode/dev-proxy/tree/0.2.x).
+The new version with dynamic multi database support (only when HostSNI is supported).
 
 ## Prerequisites
 
