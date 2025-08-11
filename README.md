@@ -13,6 +13,8 @@ Further it allows to have full TLS support by leveraging [mkcert](https://mkcert
 
 The Docker container start when the Docker daemon starts (so maybe on startup). This means you do not need to worry about it.
 
+The new version with dynamic multi database support can be previewed [here](https://github.com/scflode/dev-proxy/tree/0.2.x).
+
 ## Prerequisites
 
 In order to use the `dev-proxy` you need to have installed the following:
