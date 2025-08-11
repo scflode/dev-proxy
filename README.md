@@ -1,8 +1,17 @@
 # dev-proxy
 
-This repository contains a reverse proxy setup via
-[traefik](https://traefik.io) that allows to have services with the same port
-running locally at once.
+> [!WARNING]
+> This is the next iteration with HostSNI support for easier local database 
+> access. This might still have rough edges. Refer to `main` if you encounter 
+> issues.
+
+This repository contains a reverse proxy setup via [traefik](https://traefik.io) 
+that allows to have multiple services with the same port running locally at 
+once without port juggling.
+
+Further it allows to have full TLS support by leveraging [mkcert](https://mkcert.dev).
+
+The Docker container start when the Docker daemon starts (so maybe on startup). This means you do not need to worry about it.
 
 The new version with dynamic multi database support can be previewed [here](https://github.com/scflode/dev-proxy/tree/0.2.x).
 
@@ -10,168 +19,74 @@ The new version with dynamic multi database support can be previewed [here](http
 
 In order to use the `dev-proxy` you need to have installed the following:
 
-- Docker and docker-compose
+- Docker
 - Install [mkcert](https://mkcert.dev):
   - `brew install mkcert nss` (macOS)
   - `choco install mkcert` (Win)
   - [Linux](https://github.com/FiloSottile/mkcert#linux)
 - Clone this repository
 
+## Setup
+
+With the prerequisites satisfied you can run `make setup`. This automatically 
+sets up everything needed to use the `dev-proxy`. This target is idempotent.
+
 ## Usage
 
 In order to use the dev-proxy use `make up` or `make up logs`. 
 
+> [!NOTE]
 > This requires the dev-proxy to be setup properly as described in the section 
 > "Setup".
 
-### Add a new domain
+### Add a new domain and network
 
-To add a new domain you can use `make add domain="my-domain.localhost`.
+To add a new domain you can use `make add domain="my-domain.localhost network="my_network"`.
 
-### Remove a domain
+### Example setup of an existing project
 
-To remove a domain you can use `make remove domain="my-domain.localhost"`.
-
-### Persistent domains
-
-All domains that are configured via the Makefile (see "Add a new domain") are 
-also saved in a local `domains` file. This can also be ported between systems.
-
-## Setup
-
-To setup everything described below at once you can use `make setup`.
-
-## Manual setup
-
-### Init mkcert
-
-In order to have TLS enabled you need to have `mkcert` set up and ready.
-
-Create and setup local root certificate: `mkcert -install`
-
-### Create certificates
-
-Certificates are generated via [mkcert](https://mkcert.dev). For installation
-instructions head there.
-
-Install the default `localhost` certificate serving as fallback.
+To setup an already configured project (see [Services](./docs/04_services.md)) 
+called `app` (this is the container service you want to access) with the 
+network called `my_network` and the desired domain `my_domain` you run:
 
 ```
-mkcert -cert-file certs/local-cert.pem -key-file certs/local-key.pem localhost 127.0.0.1 ::1
+make add domain=my_domain network=my_network
+make up
 ```
 
-Install the wildcard certificate for `*.domain.localhost` domains.
+> [!IMPORTANT]
+> Next please check [Domains](./docs/02_domains.md) for information about mapping 
+> the domains to `127.0.0.1` either via `/etc/hosts` or `dnsmasq`.
 
-```
-mkcert -cert-file certs/wildcard.domain.localhost-cert.pem -key-file certs/wildcard.domain.localhost-key.pem "*.domain.localhost"
-```
+The you can access the project via your browser as [https://app.my_domain.localhost].
 
-### Configure reverse proxy
+If the project has the database labels also configured (or has a database at 
+all) you can then given the database service is configured as `db` access 
+the database locally via the host `db.my_domain.localhost` port `15432` (!) and 
+the respective username and password as well as other project specific settings.
 
-For each new domain you need to add a configuration to the reverse proxy.
+### Remove a domain and network
 
-This is done in the folder `config/dynamic` with a file named 
-`domain.localhost.yml` having content like this:
+To remove a domain you can use `make remove domain="my-domain.localhost" network="my_network"`.
 
-```
-tls:
-  certificates:
-    - certFile: "/etc/certs/wildcard.domain.localhost-cert.pem"
-      keyFile: "/etc/certs/wildcard.domain.localhost-key.pem"
-```
+## Troubleshooting
 
-## Manual steps
+When you encounter problems with not reachable services you can open 
+[https://localhost]. This shows the Traefik dashboard.
 
-### Add domains to `/etc/hosts/`
+Another useful thing could be to run `make logs` that tails the Traefik 
+container logs.
 
-Although some browsers (like Chrome, Edge) are able to automatically point
-`*.localhost` to `127.0.0.1` or `localhost` others like Safari are not. Also CLI
-tools like `curl`, `ping` etc. cannot resolve these addresses.
+## More information
 
-Open your `/etc/hosts` file and add the following:
+For all available targets you can run `make` or `make help`.
 
-```
-127.0.0.1 		my_app.domain.localhost my_other_app.domain.localhost
-```
-
-### Use dnsmasq instead hosts file (Homebrew)
-
-To setup a real DNS server you can use `dnsmasq`.
-
-The advantage is that for new domains no other step is need as to add it to the
-project (see "Add new services").
-
-For macOS use the following commands in order:
-
-```
-# Install dnsmasq via Homebrew
-brew install dnsmasq
-mkdir -pv $(brew --prefix)/etc/
-# Configure `.localhost` resolving
-echo 'address=/.localhost/127.0.0.1' >> $(brew --prefix)/etc/dnsmasq.conf
-echo 'port=53' >> $(brew --prefix)/etc/dnsmasq.conf
-# Start persistent service
-sudo brew services start dnsmasq
-sudo mkdir -v /etc/resolver
-# Add the nameserver to the resolver for `.localhost` domains
-sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/localhost'
-scutil --dns
-```
-
-> For details and discussion see https://gist.github.com/ogrrd/5831371
-
-## Add new services
-
-To add additional services add the following (adapted) labels to the project's
-`docker-compose.yml`:
-
-```
-version: "3.7"
-services:
-  my-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./application:/app:delegated
-  my-app-nginx:
-    image: nginx:latest
-    links:
-      - my-app
-    networks:
-      - default
-      - dev-proxy
-    volumes:
-      - ./application:/app:delegated
-      - ./nginx-local-dev.conf:/etc/nginx/conf.d/default.conf
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=dev-proxy"
-      - "traefik.http.routers.my-app-insecure.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app-insecure.entrypoints=web"
-      - "traefik.http.routers.my-app-insecure.middlewares=my-app-secure"
-      - "traefik.http.middlewares.my-app-secure.redirectscheme.scheme=https"
-      - "traefik.http.routers.my-app.entrypoints=web-ssl"
-      - "traefik.http.routers.my-app.rule=Host(`my-app.domain.localhost`)"
-      - "traefik.http.routers.my-app.tls=true"
-
-networks:
-  dev-proxy:
-    external: true
-```
-
-A short explanation:
-
-- use the external (global) `dev-proxy` network
-- the `labels` control how traefik will route the traffic
-- the example above shows addtionally the SSL redirect
-  (from `my-app-insecure` to `my-app-secure` via `https`
-- the `networks` must contain both the external proxy (for routing) and the
-  `default` one for inter-service communication (in this case php-fpm <-> nginx)
-
-> You need to update the `/etc/hosts` file with the new subdomain as well.
-> The `dev-proxy` does not need to get restarted as it watches any changes on
-> the `dev-proxy` network.
+- [Setup](./docs/01_setup.md)
+- [Domains](./docs/02_domains.md)
+- [Networking](./docs/03_networking.md)
+- [Services](./docs/04_services.md)
+- [Databases](./docs/05_databases.md)
+- [Internals](./docs/06_internals.md)
 
 ## License
 

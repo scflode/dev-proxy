@@ -16,7 +16,7 @@ providers:
     watch: true
 
 log:
-  level: INFO
+  level: DEBUG
   format: common
 
 entryPoints:
@@ -29,3 +29,11 @@ entryPoints:
           scheme: https
   web-ssl:
     address: ":443"
+  postgres:
+    address: ":5432"
+  mongo:
+    address: ":27017"
+  electric:
+    address: ":65432"
+  vite:
+    address: ":5173"

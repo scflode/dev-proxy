@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+function add_network {
+	local network=${1}
+	while read -r current_network; do
+		if [ "${network}" == "${current_network}" ]; then
+			echo "Network '${network}' already exists"
+			return
+		fi
+	done <networks
+	echo "Registering network '${network}'..."
+	echo ${network} >>networks
+}
+
+function install_network {
+	local network=${1}
+	if [ -z "${network}" ]; then
+		echo "No network given. Exiting."
+		exit 1
+	fi
+	add_network ${network}
+}
+
+install_network "${1}"

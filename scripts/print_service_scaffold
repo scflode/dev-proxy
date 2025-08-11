@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+function print_scaffold {
+	local domain=${1}
+	if [ -z "${domain}" ]; then
+		echo "No domain given. Exiting."
+		exit 1
+	fi
+	local project_name=${2}
+	if [ -z "${project_name}" ]; then
+		echo "No project_name given. Exiting."
+		exit 1
+	fi
+	local service_name=${3}
+	if [ -z "${service_name}" ]; then
+		echo "No service_name given. Exiting."
+		exit 1
+	fi
+	local network_name=${4}
+	if [ -z "${network_name}" ]; then
+		echo "No network_name given. Exiting."
+		exit 1
+	fi
+	local port=${5}
+	if [ -z "${port}" ]; then
+		port=80
+	fi
+
+	echo "This print contains the Traefik labels and network config for the docker-compose.yaml"
+	echo
+
+	cat <<EOF
+version: "3.7"
+services:
+  ${service_name}:
+    ...
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${network_name}"
+      - "traefik.http.services.${project_name}_${service_name}_service.loadbalancer.server.port=${port}"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.rule=Host(\`${domain}\`)"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.entrypoints=web"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.service=${project_name}_${service_name}_service"
+      - "traefik.http.routers.${project_name}_${service_name}_unsecure.middlewares=${project_name}_${service_name}_secure_middleware"
+      - "traefik.http.middlewares.${project_name}_${service_name}_secure_middleware.redirectscheme.scheme=https"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.entrypoints=web-ssl"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.rule=Host(\`${domain}\`)"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.service=${project_name}_${service_name}_service"
+      - "traefik.http.routers.${project_name}_${service_name}_secure.tls=true"
+
+networks:
+  default:
+    name: ${network_name}
+EOF
+}
+
+print_scaffold "${@}"

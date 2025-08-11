@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+function remove_network {
+	local network=${1}
+	cp networks _networks
+	sed "s/$$network//g" _networks | grep -v "^$$" >networks || echo ""
+	rm _networks
+}
+
+function uninstall_network {
+	local network=${1}
+	if [ -z "${network}" ]; then
+		echo "No network given. Exiting."
+		exit 1
+	fi
+	remove_network ${network}
+}
+
+uninstall_network ${1}
+
