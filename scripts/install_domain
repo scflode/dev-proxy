@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 
 function add_domain {
-	local domain=${1}
-	while read -r current_domain; do
-		if [ "${domain}" == "${current_domain}" ]; then
-			echo "Domain '${domain}' already exists"
-			return
-		fi
-	done <domains
-	echo "Registering domain '${domain}'..."
-	echo ${domain} >>domains
+  local domain=${1}
+  while read -r current_domain; do
+    if [ "${domain}" == "${current_domain}" ]; then
+      echo "Domain '${domain}' already exists"
+      return
+    fi
+  done <domains
+  echo "Registering domain '${domain}'..."
+  echo ${domain} >>domains
 }
 
 function install_domain {
-	local domain=${1}
-	if [ -z "${domain}" ]; then
-		echo "No domain given. Exiting."
-		exit 1
-	fi
-	add_domain ${domain}
-	echo "Installing certificates for '${domain}'..."
-	if [ -f "certs/wildcard.${domain}-cert.pem" ] && [ -f "certs/wildcard.${domain}-key.pem" ]; then
-		echo "Certificate for '${domain}' already present."
-	else
-		# Create certificate
-		mkcert \
-			-cert-file certs/wildcard."${domain}"-cert.pem \
-			-key-file certs/wildcard."${domain}"-key.pem \
-			"*.${domain}"
-		## Configure certificate for traefik
-		cat >config/dynamic/"${domain}".yml <<EOF
+  local domain=${1}
+  if [ -z "${domain}" ]; then
+    echo "No domain given. Exiting."
+    exit 1
+  fi
+  add_domain ${domain}
+  echo "Installing certificates for '${domain}'..."
+  if [ -f "certs/wildcard.${domain}-cert.pem" ] && [ -f "certs/wildcard.${domain}-key.pem" ]; then
+    echo "Certificate for '${domain}' already present."
+  else
+    # Create certificate
+    mkcert \
+      -cert-file certs/wildcard."${domain}"-cert.pem \
+      -key-file certs/wildcard."${domain}"-key.pem \
+      "${domain}" "*.${domain}"
+    ## Configure certificate for traefik
+    cat >config/dynamic/"${domain}".yml <<EOF
 tls:
   certificates:
     - certFile: "/etc/certs/wildcard.${domain}-cert.pem"
       keyFile: "/etc/certs/wildcard.${domain}-key.pem"
 EOF
-	fi
+  fi
 }
 
 install_domain "${1}"
