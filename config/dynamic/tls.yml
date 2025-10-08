@@ -1,0 +1,7 @@
+tls:
+  options:
+    default:
+      alpnProtocols:
+        - http/1.1
+        - h2
+        - postgresql

@@ -1,5 +1,6 @@
 certs/
 config/dynamic/
 !config/dynamic/local.yml
+!config/dynamic/tls.yml
 domains
 networks
